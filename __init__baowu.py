@@ -4,8 +4,8 @@ import time
 from datetime import datetime
 from graph import Graph
 from alg001_MG2250 import Alg001
-
-
+from alg003_MG2250 import Alg003
+from alg004_MG2250 import Alg004
 
 
 def main():
@@ -15,11 +15,12 @@ def main():
             graph = Graph.graph_from_json(x)
             algcode = graph.algcode
 
-            if algcode == 'alg001':  # 电机卡阻
+            if algcode == 'alg001_MG2250':    # 电机卡阻
                 alg = Alg001(graph)
-
-
-
+            elif algcode == 'alg003_MG2250':  # 伺服阀动作过程压差指标
+                alg = Alg003(graph)
+            elif algcode == 'alg004_MG2250':  # 伺服阀稳态过程开口度
+                alg = Alg004(graph)
             else:
                 raise Exception("Algorithm not registered !")
 

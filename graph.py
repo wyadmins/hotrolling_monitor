@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import com_util
 
+
 class Graph:
     def __init__(self, nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
                  starttime, endtime, channelid, deviceid, devicename, aiid):
