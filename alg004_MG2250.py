@@ -2,12 +2,13 @@
 Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度
 ==============
-Input Signals (3):
+Input Signals (4):
 * 实际辊缝值：gap_act
-* 实际设定值：gap_ref
-* 速度设定值: speed_ref
+* 辊缝设定值：gap_ref
+* 伺服阀开口度：sv_out
+* 速度给定值: speed_ref
 
-Parameter Configs (4)：
+Parameter Configs (2)：
 * 辊缝稳态最大值
 * 稳态持续时间下限(秒)
 ==============
@@ -41,7 +42,7 @@ class Alg004:
             upper_limit = max_gap * 1.01
             lower_limit = max_gap * 0.99
             idx = (df.gap_act < upper_limit) & (df.gap_act > lower_limit) & (df.gap_ref == max_gap) \
-                  & (max_gap > algparas[0]) & (df.speed_ref != 0)
+                  & (max_gap > algparas[0]) & (df.speed_ref == 0)   # 停机伺服阀稳态开口度
             n = algparas[1] * df.num_per_sec
             re_iter = com_util.Reg.finditer(idx, n)
             for i in re_iter:
