@@ -2,6 +2,7 @@ import json
 import requests
 import pandas as pd
 import com_util
+import time
 
 
 class Graph:
@@ -94,3 +95,4 @@ class Event:
         self.alarm_time = value['meastime']
         self.alarm_level = value['level']
         self.alarm_info = value['info']
+        self.send_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime())
