@@ -2,7 +2,7 @@ import sys
 import time
 import traceback
 from graph import Graph
-from alarm001 import Alarm001
+# from alarm001_MG2250 import Alarm001
 
 
 def main():
@@ -13,8 +13,8 @@ def main():
             algcode = graph.algcode
 
             if algcode == 'alarm001':  # 助卷辊电机卡阻
-                alg = Alarm001(graph)
-
+                # alg = Alarm001(graph)
+                pass
             sys.stdout.write(str(graph.to_json()))
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
