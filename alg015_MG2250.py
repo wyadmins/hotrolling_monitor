@@ -25,7 +25,7 @@ import numpy as np
 from graph import Event
 
 
-class Alarm001:
+class Alg015:
     def __init__(self, graph):
         self.graph = graph
 
