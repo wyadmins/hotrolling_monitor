@@ -3,11 +3,11 @@ Provides:
 F1-F7精轧机黏铁检测
 ==============
 Input Signals (5):
-* os_lc
-* os_pt
-* ds_lc
-* ds_pt
-* agc_active
+* agc_active: 抛钢信号
+* os_lc： 操作侧轧制力（LC）
+* os_pt： 操作侧轧制力（PT）
+* ds_lc： 驱动侧轧制力（LC）
+* ds_pt： 驱动侧轧制力（PT）
 
 Parameter Configs (1)：
 * 抛钢后持续时长（秒）
@@ -65,7 +65,7 @@ class Alg014:
         return measdate, std_force, avg_force, max_force, min_force
 
     def execute(self):
-        df = self.graph.get_data_from_api(['os_lc', 'os_pt', 'ds_lc', 'ds_pt', 'agc_active'])
+        df = self.graph.get_data_from_api(['agc_active', 'os_lc', 'os_pt', 'ds_lc', 'ds_pt'])
 
         df['force'] = df['os_lc']
         measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
