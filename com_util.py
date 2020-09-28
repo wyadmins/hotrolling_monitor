@@ -50,10 +50,10 @@ def down_sample(df):
 
 class Reg:
     @staticmethod
-    def finditer(idx, n):
+    def finditer(idx, n, flag=1):
         s = idx.astype(int)
         str1 = ''.join(str(i) for i in s)
-        re_iter = re.finditer(f'1{n,}'.replace('(', '{').replace(')', '}'), str1)
+        re_iter = re.finditer(f'{flag}{n,}'.replace('(', '{').replace(')', '}'), str1)
         return re_iter
 
     @staticmethod
