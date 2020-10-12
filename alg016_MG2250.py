@@ -20,6 +20,7 @@ Outputs:
 
 
 import numpy as np
+import pandas as pd
 from graph import Event, Index
 
 
@@ -33,21 +34,21 @@ class Alg016:
             return
         algparas = self.graph.parameter
 
-        rolling = df['sv_ref'].rolling(algparas[0] * df.dt)
-        roll_cv = np.abs(rolling.std() / rolling.mean())   # 计算窗口变异系数
+        rolling = df['sv_ref'].rolling(int(algparas[0] / df.dt))
+        roll_cv = np.abs(rolling.std() / rolling.mean())   # 计算参考值窗口变异系数
 
-        min_cv = roll_cv.max()
+        min_cv = roll_cv.min()
         if min_cv > algparas[1]:   # 数据包不包含稳态工况
             return
 
-        stidx = roll_cv.argmin() - np.floor(algparas[0] * df.dt / 2)
-        edidx = roll_cv.argmin() + np.ceil(algparas[0] * df.dt / 2)
+        stidx = roll_cv.idxmin() - pd.Timedelta(algparas[0]/2, unit='s')
+        edidx = roll_cv.idxmin() + pd.Timedelta(algparas[0]/2, unit='s')
 
         n = (edidx - stidx) // 5  # 对稳态段切头切尾
         avg_ref = np.mean(df['sv_ref'][stidx + n:edidx - n])
         avg_act = np.mean(df['sv_act'][stidx + n:edidx - n])
 
-        r = np.abs(avg_ref - avg_act) / avg_ref * 100  # 计算稳态工况设定值与实际值偏差
+        r = np.abs(avg_ref - avg_act)  # 计算稳态工况设定值与实际值偏差
 
         index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "16000",
                        'value1st': r, 'indices2nd': []})
