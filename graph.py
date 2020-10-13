@@ -120,12 +120,12 @@ class Graph_test(Graph):
         self.parameter = parameters
 
     def get_data_from_api(self, tags):
-        df = pd.DataFrame(np.loadtxt(r"E:\baowu\源数据\伺服阀零偏测试.txt", skiprows=1))
+        df = pd.DataFrame(np.loadtxt(r"E:\baowu\源数据\双仪表检测测试.txt", skiprows=1))
         df.index = pd.date_range(start='10/1/2020', freq='50L', periods=df.shape[0])
         df.dt, df.num_per_sec = com_util.get_dt(df.index)
         df.columns = [tags[1], tags[0]]
-        df['sv_ref'] = (df['sv_ref']) / 32000 * 100
-        df['sv_act'] = (df['sv_act'] - 800) / 3200 * 200 - 100
+        # df['sv_ref'] = (df['sv_ref']) / 32000 * 100
+        # df['sv_act'] = (df['sv_act'] - 800) / 3200 * 200 - 100
         return df
 
     @staticmethod
