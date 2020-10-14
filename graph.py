@@ -8,7 +8,7 @@ import time
 
 class Graph:
     def __init__(self, nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
-                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters):
+                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs):
         self.nodes = nodes
         self.algcode = algcode
         self.datasource = datasource
@@ -23,6 +23,7 @@ class Graph:
         self.devicename = devicename
         self.aiid = aiid
         self.parameter = parameters
+        self.alarm_thd = alarm_configs
 
     @staticmethod
     def graph_from_json(data):
@@ -44,8 +45,9 @@ class Graph:
         datasourcetimes = datasource.get('datasourcetimes')
         aiid = datasource.get('aiid')
         parameters = datasource.get('parameter')
+        alarm_configs = datasource.get('alarm_configs')
         return Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
-              starttime, endtime, channelid, deviceid, devicename, aiid, parameters)
+              starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
 
     def to_json(self):
         def to_dict(value):
@@ -76,6 +78,18 @@ class Graph:
         rep = requests.post(url=url, data=data, headers={'Content-Type': 'application/json'})
         return rep.ok
 
+    def set_alarm(self, alarm_info='无报警明细'):
+        """
+        计算指标固定门限报警
+        """
+        for indice in self.indices:
+            if [-1, -1] == self.alarm_thd.get(indice.feid1st):
+                continue
+            if indice.value1st > self.alarm_thd.get(indice.feid1st)[0] or indice.value1st < self.alarm_thd.get(indice.feid1st)[1]:
+                event = Event({'assetid': self.deviceid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
+                self.events.append(event)
+
+
 
 class Index:
     """
@@ -103,7 +117,7 @@ class Event:
 
 class Graph_test(Graph):
     def __init__(self, nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
-                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters):
+                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs):
         self.nodes = nodes
         self.algcode = algcode
         self.datasource = datasource
@@ -118,12 +132,13 @@ class Graph_test(Graph):
         self.devicename = devicename
         self.aiid = aiid
         self.parameter = parameters
+        self.alarm_thd = alarm_configs
 
     def get_data_from_api(self, tags):
-        df = pd.DataFrame(np.loadtxt(r"E:\baowu\源数据\双仪表检测测试.txt", skiprows=1))
+        df = pd.DataFrame(np.loadtxt(r"E:\baowu\源数据\电机稳态测试.txt", skiprows=1))
         df.index = pd.date_range(start='10/1/2020', freq='50L', periods=df.shape[0])
         df.dt, df.num_per_sec = com_util.get_dt(df.index)
-        df.columns = [tags[1], tags[0]]
+        df.columns = [tags[1], tags[2], tags[0]]
         # df['sv_ref'] = (df['sv_ref']) / 32000 * 100
         # df['sv_act'] = (df['sv_act'] - 800) / 3200 * 200 - 100
         return df
@@ -148,5 +163,6 @@ class Graph_test(Graph):
         datasourcetimes = datasource.get('datasourcetimes')
         aiid = datasource.get('aiid')
         parameters = datasource.get('parameter')
+        alarm_configs = datasource.get('alarm_configs')
         return Graph_test(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
-              starttime, endtime, channelid, deviceid, devicename, aiid, parameters)
+              starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
