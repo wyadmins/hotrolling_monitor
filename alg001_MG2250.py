@@ -54,8 +54,8 @@ class Alg001:
         if not df.empty:
             idx = (df.spd_ref >= algparas[0]) & (df.spd_ref <= algparas[1])
             re_iter = com_util.Reg.finditer(idx, algparas[2] * df.num_per_sec)
-            n1 = algparas[3] * df.num_per_sec
-            n2 = algparas[4] * df.num_per_sec
+            n1 = int(algparas[3] * df.num_per_sec)
+            n2 = int(algparas[4] * df.num_per_sec)
             for i in re_iter:
                 [stidx, edidx] = i.span()
                 if edidx - stidx > 2 * n1:
