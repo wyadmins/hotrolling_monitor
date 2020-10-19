@@ -4,12 +4,13 @@ Provides:
 ==============
 Input Signals (4):
 * 实际辊缝值：gap_act
-* 辊缝设定值：gap_ref
 * 伺服阀开口度：sv_out
 * 速度给定值: speed_ref
+* 伺服阀前截止阀: cutoff_valve
 
 Parameter Configs (2)：
-* 辊缝稳态最大值
+* 实际辊缝给定下限
+* 实际辊缝给定上限
 * 稳态持续时间下限(秒)
 ==============
 Outputs:
@@ -38,12 +39,9 @@ class Alg004:
         min_sv_out = []
         measdate = []
         if not df.empty:
-            max_gap = np.max(df.gap_ref)
-            upper_limit = max_gap * 1.01
-            lower_limit = max_gap * 0.99
-            idx = (df.gap_act < upper_limit) & (df.gap_act > lower_limit) & (df.gap_ref == max_gap) \
-                  & (max_gap > algparas[0]) & (df.speed_ref == 0)   # 停机伺服阀稳态开口度
-            n = algparas[1] * df.num_per_sec
+            idx = (df.gap_act >= algparas[0]) & (df.gap_act <= algparas[1]) \
+                  & (df.speed_ref == 0) & (df.cutoff_valve == 1)   # 停机伺服阀稳态开口度
+            n = algparas[2] * df.num_per_sec
             re_iter = com_util.Reg.finditer(idx, n)
             for i in re_iter:
                 [stidx, edidx] = i.span()
@@ -56,7 +54,7 @@ class Alg004:
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
     def execute(self):
-        df = self.graph.get_data_from_api(['gap_ref', 'gap_act', 'sv_out', 'speed_ref'])
+        df = self.graph.get_data_from_api(['gap_ref', 'gap_act', 'sv_out', 'speed_ref', 'cutoff_valve'])
         measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out = self.get_fe(df, self.graph.parameter)
         for i, meastime in enumerate(measdate):
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10400",
@@ -71,3 +69,4 @@ class Alg004:
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10403",
                            'value1st': min_sv_out[i], 'indices2nd': []})
             self.graph.indices.append(index)
+        self.graph.set_alarm('伺服阀泄漏特征：开口度指标异常！')
