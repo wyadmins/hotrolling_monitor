@@ -28,7 +28,7 @@ import pandas as pd
 from graph import Index
 
 
-class Alg016:
+class Alg017:
     def __init__(self, graph):
         self.graph = graph
 
