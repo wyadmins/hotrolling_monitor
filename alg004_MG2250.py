@@ -54,8 +54,7 @@ class Alg004:
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
     def execute(self):
-        # df = self.graph.get_data_from_api(['gap_ref', 'gap_act', 'sv_out', 'speed_ref', 'cutoff_valve'])
-        df = self.graph.get_data_from_api(['gap_ref', 'gap_act', 'sv_out', 'speed_ref'])
+        df = self.graph.get_data_from_api(['gap_act', 'sv_out', 'speed_ref', 'cutoff_valve'])
         measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out = self.get_fe(df, self.graph.parameter)
         for i, meastime in enumerate(measdate):
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10400",
