@@ -38,7 +38,7 @@ from graph import Index
 import com_util
 
 
-class Alg001:
+class Alg001_S2:
     def __init__(self, graph):
         self.graph = graph
 

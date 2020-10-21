@@ -33,7 +33,7 @@ import com_util
 from graph import Index
 
 
-class Alg001:
+class Alg005:
     def __init__(self, graph):
         self.graph = graph
 
