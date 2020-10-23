@@ -62,7 +62,7 @@ class Alg015:
             n = np.sum(np.abs(df['signal1'] - df['signal2']))
             t = n * df.dt
             if t > p4 or n > p5:
-                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配'})
+                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '报警：双仪表数值不匹配'})
                 self.graph.events.append(event)
 
     def execute(self):

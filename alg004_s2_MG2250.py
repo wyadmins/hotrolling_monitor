@@ -68,3 +68,4 @@ class Alg004_S2:
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10403",
                            'value1st': min_sv_out[i], 'indices2nd': []})
             self.graph.indices.append(index)
+        self.graph.set_alarm('伺服阀稳态开口度异常！')

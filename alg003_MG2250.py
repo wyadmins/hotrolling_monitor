@@ -105,3 +105,4 @@ class Alg003:
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10307",
                            'value1st': min_pressure2[i], 'indices2nd': []})
             self.graph.indices.append(index)
+        self.graph.set_alarm('伺服阀动作过程状态异常！')
