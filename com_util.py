@@ -39,7 +39,7 @@ def find_0_to_1(d):
 
 
 def find_1_to_0(d):
-    indexs = np.where(-1 == np.diff(d))
+    indexs = np.where(-1 == np.diff(d))[0]
     return indexs
 
 
@@ -53,7 +53,7 @@ class Reg:
     def finditer(idx, n, flag=1):
         s = idx.astype(int)
         str1 = ''.join(str(i) for i in s)
-        re_iter = re.finditer(f'{flag}{n,}'.replace('(', '{').replace(')', '}'), str1)
+        re_iter = re.finditer(f'{flag}{int(n),}'.replace('(', '{').replace(')', '}'), str1)
         return re_iter
 
     @staticmethod
