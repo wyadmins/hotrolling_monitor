@@ -80,21 +80,23 @@ class Alg005:
         try:
             algparas = self.graph.parameter
             df = self.graph.get_data_from_api(['zeroing_run', 'hgc_force_os', 'hgc_pos_os', 'hgc_force_ds', 'hgc_pos_ds'])
-            df = df[1 == df['zeroing_run']]
-            if df.empty:
+            df_in_zeroing = df[1 == df['zeroing_run']]
+
+            if df_in_zeroing.empty:
                 return
 
-            df2 = df[['hgc_force_os', 'hgc_pos_os']].rename(columns={'hgc_force_os': 'hgc_force', 'hgc_pos_os': 'hgc_position'})
-            [stidxs, edidxs] = self.regexp_monotrend(df2['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
-            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df2)
+            # 操作侧刚度计算
+            df_os = df_in_zeroing[['hgc_force_os', 'hgc_pos_os']].rename(columns={'hgc_force_os': 'hgc_force', 'hgc_pos_os': 'hgc_position'})
+            [stidxs, edidxs] = self.regexp_monotrend(df_os['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
+            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df_os)
             for i, meastime in enumerate(meadate):
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50000",
                                'value1st': avg_stiffness[i], 'indices2nd': stiffness})
                 self.graph.indices.append(index)
-
-            df3 = df[['hgc_force_ds', 'hgc_pos_ds']].rename(columns={'hgc_force_ds': 'hgc_force', 'hgc_pos_ds': 'hgc_position'})
-            [stidxs, edidxs] = self.regexp_monotrend(df3['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
-            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df3)
+            # 驱动侧刚度计算
+            df_ds = df_in_zeroing[['hgc_force_ds', 'hgc_pos_ds']].rename(columns={'hgc_force_ds': 'hgc_force', 'hgc_pos_ds': 'hgc_position'})
+            [stidxs, edidxs] = self.regexp_monotrend(df_ds['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
+            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df_ds)
             for i, meastime in enumerate(meadate):
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50001",
                                'value1st': avg_stiffness[i], 'indices2nd': stiffness})
