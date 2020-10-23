@@ -39,7 +39,7 @@ def find_0_to_1(d):
 
 
 def find_1_to_0(d):
-    indexs = np.where(-1 == np.diff(d))
+    indexs = np.where(-1 == np.diff(d))[0]
     return indexs
 
 

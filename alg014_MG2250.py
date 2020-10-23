@@ -57,10 +57,10 @@ class Alg014:
         if not df.empty:
             indexs = find_1_to_0(df['agc_active'])
             for i in indexs:
-                std_force = np.std(df['force'][i: i+duration*df.num_per_sec])
-                avg_force = np.mean(df['force'][i:i+duration*df.num_per_sec])
-                max_force = np.max(df['force'][i: i+duration*df.num_per_sec])
-                min_force = np.min(df['force'][i: i+duration*df.num_per_sec])
+                std_force.append(np.std(df['force'][i: i+duration*df.num_per_sec]))
+                avg_force.append(np.mean(df['force'][i:i+duration*df.num_per_sec]))
+                max_force.append(np.max(df['force'][i: i+duration*df.num_per_sec]))
+                min_force.append(np.min(df['force'][i: i+duration*df.num_per_sec]))
                 measdate.append(df.index[i])
         return measdate, std_force, avg_force, max_force, min_force
 
