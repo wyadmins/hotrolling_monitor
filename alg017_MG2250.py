@@ -52,8 +52,8 @@ class Alg016:
         if np.isnan(min_cv):   # 数据包不包含稳态工况
             return
 
-        stidx = roll_cv[idx1 & idx2].argmin() - np.floor(algparas[0] * df.dt / 2)
-        edidx = roll_cv[idx1 & idx2].argmin() + np.ceil(algparas[0] * df.dt / 2)
+        stidx = roll_cv[idx1 & idx2].argmin() - int(np.floor(algparas[0] * df.dt / 2))
+        edidx = roll_cv[idx1 & idx2].argmin() + int(np.ceil(algparas[0] * df.dt / 2))
 
         n = (edidx - stidx) // 5  # 对稳态段切头切尾
         avg_pressure = np.mean(df['pressure'][stidx + n:edidx - n])
