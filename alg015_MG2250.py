@@ -56,7 +56,7 @@ class Alg015:
         if not df.empty:
             n = np.sum(np.abs(df['signal1'] - df['signal2']))
             t = n * df.dt
-            if t > p4 or n > p5:
+            if n > p4 and t > p5:
                 event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配'})
                 self.graph.events.append(event)
 
