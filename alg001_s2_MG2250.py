@@ -58,7 +58,7 @@ class Alg001_S2:
         measdate = []
         if not df.empty:
             idx = (df.spd_ref >= algparas[0]) & (df.spd_ref <= algparas[1]) & (0 == df.hook_status)
-            re_iter = com_util.Reg.finditer(idx, algparas[2] * df.num_per_sec)
+            re_iter = com_util.Reg.finditer(idx, int(algparas[2] * df.num_per_sec))
             n1 = int(algparas[3] * df.num_per_sec)
             n2 = int(algparas[4] * df.num_per_sec)
             for i in re_iter:
