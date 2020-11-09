@@ -3,6 +3,7 @@ Provides:
 电机空载电流均值/标准差
 ==============
 Input Signals (3):
+* 钩子状态（放下状态）
 * 速度给定
 * 实际电流
 * 实际转矩
@@ -26,20 +27,24 @@ Outputs:
 * 空载转矩标准差：10105
 * 空载转矩最大值：10106
 * 空载转矩最小值：10107
+==============
+Notes
+1. 加入钩子信号筛选条件，适用于换辊小车
 """
+
 
 import numpy as np
 from graph import Index
 import com_util
 
 
-class Alg001:
+class Alg001_S2:
     def __init__(self, graph):
         self.graph = graph
 
     def get_curr_avg_and_std(self):
 
-        df = self.graph.get_data_from_api(['spd_ref', 'curr_act', 'torq_act'])
+        df = self.graph.get_data_from_api(['spd_ref', 'curr_act', 'torq_act', 'hook_status'])
         algparas = self.graph.parameter
 
         curr_avg = []
@@ -52,7 +57,7 @@ class Alg001:
         torq_min = []
         measdate = []
         if not df.empty:
-            idx = (df.spd_ref >= algparas[0]) & (df.spd_ref <= algparas[1])
+            idx = (df.spd_ref >= algparas[0]) & (df.spd_ref <= algparas[1]) & (0 == df.hook_status)
             re_iter = com_util.Reg.finditer(idx, int(algparas[2] * df.num_per_sec))
             n1 = int(algparas[3] * df.num_per_sec)
             n2 = int(algparas[4] * df.num_per_sec)

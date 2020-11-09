@@ -55,7 +55,7 @@ class Alg016:
         self.graph.indices.append(index)
 
         if r > algparas[2]:
-            event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '伺服阀零偏报警'})
+            event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '报警：伺服阀零偏异常！'})
             self.graph.events.append(event)
 
     def execute(self):

@@ -23,7 +23,7 @@ Outputs:
 
 import numpy as np
 import com_util
-from graph import Event
+from graph import Event, Index
 
 
 class Alg015:
@@ -44,8 +44,13 @@ class Alg015:
                 n = (edidx - stidx) // 5  # 切头尾
                 r = (np.abs(np.mean(df.signal1[stidx+n:edidx-n]) - np.mean(df.signal2[stidx+n:edidx-n]))) \
                     / np.mean(df.signal1[stidx+n:edidx-n]) * 100  # 双仪表相对偏差（%）
+
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "15000",
+                               'value1st': r, 'indices2nd': []})
+                self.graph.indices.append(index)
+
                 if r > p3:
-                    event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配'})
+                    event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
                     self.graph.events.append(event)
 
     def get_alarm_logical(self, p4, p5):
@@ -57,7 +62,7 @@ class Alg015:
             n = np.sum(np.abs(df['signal1'] - df['signal2']))
             t = n * df.dt
             if n > p4 and t > p5:
-                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配'})
+                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '报警：双仪表数值不匹配！'})
                 self.graph.events.append(event)
 
     def execute(self):

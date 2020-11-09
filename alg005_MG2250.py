@@ -2,10 +2,13 @@
 Provides:
 精轧机零调刚度计算
 ==============
-Input Signals (3):
-* hgc_force: 压力
-* hgc_pos:   操作侧位置
-* zero_run:  零调标志位
+Input Signals (5):
+* zeroing_run:  零调标志位
+* hgc_force_os: 操作侧轧制力
+* hgc_pos_os:   操作侧HGC位置
+* hgc_force_ds: 驱动侧轧制力
+* hgc_pos_ds:   驱动侧HGC位置
+
 
 Parameter Configs (3)：
 * 刚度计算压力区间最小值
@@ -16,14 +19,10 @@ Parameter Configs (3)：
 Outputs:
 指标   |  指标id
 ---------------------
-* 空载电流均值：  10100
-* 空载电流标准差：10101
-* 空载电流最大值：10102
-* 空载电流最小值：10103
-* 空载转矩均值：  10104
-* 空载转矩标准差：10105
-* 空载转矩最大值：10106
-* 空载转矩最小值：10107
+* 操作侧刚度 50000
+** 操作侧分段刚度 （二次指标）
+* 驱动侧刚度 50001
+** 驱动侧分段刚度 （二次指标）
 """
 
 import sys
@@ -33,7 +32,7 @@ import com_util
 from graph import Index
 
 
-class Alg001:
+class Alg005:
     def __init__(self, graph):
         self.graph = graph
 
@@ -80,16 +79,29 @@ class Alg001:
     def execute(self):
         try:
             algparas = self.graph.parameter
-            df = self.graph.get_data_from_api(['hgc_force', 'hgc_pos', 'zero_run'])
-            df = df[1 == df['zeroing_run']]
-            if df.empty:
+            df = self.graph.get_data_from_api(['zeroing_run', 'hgc_force_os', 'hgc_pos_os', 'hgc_force_ds', 'hgc_pos_ds'])
+            df_in_zeroing = df[1 == df['zeroing_run']]
+
+            if df_in_zeroing.empty:
                 return
-            [stidxs, edidxs] = self.regexp_monotrend(df['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
-            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df)
+
+            # 操作侧刚度计算
+            df_os = df_in_zeroing[['hgc_force_os', 'hgc_pos_os']].rename(columns={'hgc_force_os': 'hgc_force', 'hgc_pos_os': 'hgc_position'})
+            [stidxs, edidxs] = self.regexp_monotrend(df_os['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
+            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df_os)
             for i, meastime in enumerate(meadate):
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50000",
                                'value1st': avg_stiffness[i], 'indices2nd': stiffness})
                 self.graph.indices.append(index)
+            # 驱动侧刚度计算
+            df_ds = df_in_zeroing[['hgc_force_ds', 'hgc_pos_ds']].rename(columns={'hgc_force_ds': 'hgc_force', 'hgc_pos_ds': 'hgc_position'})
+            [stidxs, edidxs] = self.regexp_monotrend(df_ds['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
+            [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df_ds)
+            for i, meastime in enumerate(meadate):
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50001",
+                               'value1st': avg_stiffness[i], 'indices2nd': stiffness})
+                self.graph.indices.append(index)
+
         except Exception as _:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             errorinfo = repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
