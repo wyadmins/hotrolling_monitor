@@ -2,7 +2,7 @@
 Provides:
 卷曲卷筒冲顶报警和统计，高温卷统计
 ==============
-Input Signals (8):
+Input Signals(8):
 * 入卷温度1: in_coil_temp1
 * 入卷温度标志: in_coil_temp_flag
 * 入卷温度2: in_coil_temp2
@@ -15,7 +15,7 @@ Input Signals (8):
 Parameter Configs (None)：
 *
 ==============
-Outputs:
+Outputs(3):
 指标   |  指标id
 ---------------------
 * 满涨冲顶报警凑数： 21000

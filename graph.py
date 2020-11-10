@@ -86,7 +86,7 @@ class Graph:
             if [-1, -1] == self.alarm_thd.get(indice.feid1st):
                 continue
             if indice.value1st > self.alarm_thd.get(indice.feid1st)[0] or indice.value1st < self.alarm_thd.get(indice.feid1st)[1]:
-                event = Event({'assetid': self.deviceid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
+                event = Event({'assetid': self.deviceid, 'aiid': self.aiid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
                 self.events.append(event)
 
 
