@@ -1,8 +1,8 @@
 import sys
 import traceback
 import time
+from com_util import generate_graph
 from datetime import datetime
-from graph import Graph
 from alg001_MG2250 import Alg001
 from alg001_s2_MG2250 import Alg001_S2
 from alg003_MG2250 import Alg003
@@ -21,7 +21,7 @@ def main():
     t1 = time.time()
     for x in sys.stdin:
         try:
-            graph = Graph.graph_from_json(x)
+            graph = generate_graph(x)
             algcode = graph.algcode
 
             if algcode == 'alg001_MG2250':    # 电机卡阻

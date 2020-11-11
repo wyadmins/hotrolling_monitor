@@ -3,28 +3,10 @@ import json
 import pandas as pd
 import numpy as np
 import re
-
-
-def get_data_from_api(guid, st, ed):
-    if isinstance(guid, str):
-        url = f'http://192.168.1.15:8131/api/Values?tagid={guid}&Start={st}&End={ed}'
-    elif isinstance(guid, list) and 1 == len(guid):
-        url = f'http://192.168.1.15:8131/api/Values?tagid={guid[0]}&Start={st}&End={ed}'
-    else:
-        raise Exception("guid numbers > 1 !")
-    # url = f'http://127.0.0.1:8130/api/Values?tagid={guid}&Start={st}&End={ed}'
-    r = requests.get(url)
-    data = pd.Series(json.loads(r.json()))
-    return data
-
-
-def get_data_from_api_v2(assetid, aiid, st, ed, tags):
-    url = f'http://192.168.1.87:8132/api/Values/GetTagDataGet?AssetId={assetid}&AiId={aiid}&Start={st}&End={ed}'
-    r = requests.get(url)
-    data = pd.Series(json.loads(r.json()))
-    df = pd.DataFrame(data['Result']['Detail']).T
-    df.columns = tags
-    return df
+import gzip
+import timeseries_pb2
+import base64
+from graph import Graph
 
 
 def get_dt(index):
@@ -62,3 +44,12 @@ class Reg:
         str1 = ''.join(str(i) for i in s)
         r2 = re.search(f'1{sec,}'.replace('(', '{').replace(')', '}'), str1)
         return r2
+
+
+def generate_graph(x):
+    c = timeseries_pb2.KafkaAiDataDto()
+    content = gzip.decompress(base64.b64decode(x))
+    c.ParseFromString(content)
+    graph = Graph.graph_from_json(x)
+    graph.data = c.Data
+    return graph
