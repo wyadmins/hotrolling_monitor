@@ -3,6 +3,10 @@ import json
 import pandas as pd
 import numpy as np
 import re
+import gzip
+import timeseries_pb2
+import base64
+from graph import Graph
 
 
 def get_data_from_api(guid, st, ed):
@@ -62,3 +66,12 @@ class Reg:
         str1 = ''.join(str(i) for i in s)
         r2 = re.search(f'1{sec,}'.replace('(', '{').replace(')', '}'), str1)
         return r2
+
+
+def generate_graph(x):
+    c = timeseries_pb2.KafkaAiDataDto()
+    content = gzip.decompress(base64.b64decode(x))
+    c.ParseFromString(content)
+    graph = Graph.graph_from_json(x)
+    graph.data = c.Data
+    return graph

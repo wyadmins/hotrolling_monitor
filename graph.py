@@ -49,6 +49,27 @@ class Graph:
         return Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
               starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
 
+    @staticmethod
+    def graph_from_probuf(data):
+        nodes = ''
+        datasource = ''
+        indices = []
+        events = []
+        datasourcetimes = ''
+        exceptions = []
+        starttime = data.starttime.ToJsonString()
+        endtime = data.endtime.ToJsonString()
+        channelid = [tag.ChannelId for tag in data.tags]
+        algcode = data.algCode
+        deviceid = data.deviceid
+        devicename = data.devicename
+        aiid = data.aiid
+        parameters = data.parameter
+        alarm_configs = data.alarm_configs
+
+        return Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
+              starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
+
     def to_json(self):
         def to_dict(value):
             return {k: v for k, v in value.__dict__.items() if
@@ -65,6 +86,17 @@ class Graph:
         df.set_index(pd.to_datetime(df.index), inplace=True)
         df.dt, df.num_per_sec = com_util.get_dt(df.index)
         return df
+
+    def get_data_from_protobuf(self, tags):
+        df = pd.DataFrame({})
+        for i, x in enumerate(self.data):
+            df[i] = list(x.data)
+        df.columns = tags
+        df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(self.data[0].time), unit='ms')
+        df.dt, df.num_per_sec = com_util.get_dt(df.index)
+        return df
+
+
 
     def read_cache(self):
         url = f"http://192.168.1.15:8130/api/services/app/V1_Ai/GetAiCache?DeviceId={self.deviceid}&AlgCode={self.algcode}"
@@ -88,7 +120,6 @@ class Graph:
             if indice.value1st > self.alarm_thd.get(indice.feid1st)[0] or indice.value1st < self.alarm_thd.get(indice.feid1st)[1]:
                 event = Event({'assetid': self.deviceid, 'aiid': self.aiid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
                 self.events.append(event)
-
 
 
 class Index:
