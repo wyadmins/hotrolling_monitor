@@ -60,14 +60,14 @@ class Alg010:
 
     def execute(self):
         if 1 == len(self.graph.channelid):
-            df = self.graph.get_data_from_api(['speed'])
+            df = self.graph.get_data_from_protobuf(['speed'])
             measdate, s_total = self.get_fe_v1(df)   # 计算总里程
             if measdate:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': "11000",
                                'value1st': s_total, 'indices2nd': []})
                 self.graph.indices.append(index)
         else:
-            df = self.graph.get_data_from_api(['speed', 'in_force_control'])
+            df = self.graph.get_data_from_protobuf(['speed', 'in_force_control'])
             measdate, s_total, s_in_operation, s_idler = self.get_fe_v2(df)  # 计算总里程、负载里程、空载里程
             if measdate:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': "11000",

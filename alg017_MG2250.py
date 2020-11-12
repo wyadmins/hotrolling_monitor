@@ -36,11 +36,11 @@ class Alg017:
     def get_alarm(self):
         signal_num = len(self.graph.channelid)
         if 3 == signal_num:
-            df = self.graph.get_data_from_api(['pressure', 's1', 's2'])
+            df = self.graph.get_data_from_protobuf(['pressure', 's1', 's2'])
         elif 4 == signal_num:
-            df = self.graph.get_data_from_api(['pressure', 's1', 's2', 's3'])
+            df = self.graph.get_data_from_protobuf(['pressure', 's1', 's2', 's3'])
         elif 5 == signal_num:
-            df = self.graph.get_data_from_api(['pressure', 's1', 's2', 's3', 's4'])
+            df = self.graph.get_data_from_protobuf(['pressure', 's1', 's2', 's3', 's4'])
         else:
             raise Exception("Exception(减压阀漂移策略)：输入点位数量错误!")
 

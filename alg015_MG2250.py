@@ -34,7 +34,7 @@ class Alg015:
         """
         模拟量信号
         """
-        df = self.graph.get_data_from_api(['signal1', 'signal2'])
+        df = self.graph.get_data_from_protobuf(['signal1', 'signal2'])
 
         if not df.empty:
             idx = df['signal1'] > p2
@@ -57,7 +57,7 @@ class Alg015:
         """
         0-1型信号
         """
-        df = self.graph.get_data_from_api(['signal1', 'signal2'])
+        df = self.graph.get_data_from_protobuf(['signal1', 'signal2'])
         if not df.empty:
             n = np.sum(np.abs(df['signal1'] - df['signal2']))
             t = n * df.dt

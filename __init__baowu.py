@@ -24,7 +24,7 @@ def main():
             graph = generate_graph(x)
             algcode = graph.algcode
 
-            if algcode == 'alg001_MG2250':    # 电机卡阻
+            if algcode == 'alg001':    # 电机卡阻
                 alg = Alg001(graph)
             elif algcode == 'alg001_s2_MG2250':    # 电机卡阻s2
                 alg = Alg001_S2(graph)

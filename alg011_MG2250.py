@@ -45,7 +45,7 @@ class Alg011:
         return measdate, switch_nums, run_time, stop_time
 
     def execute(self):
-        df = self.graph.get_data_from_api(['drive_run'])
+        df = self.graph.get_data_from_protobuf(['drive_run'])
         measdate, switch_nums, run_time, stop_time = self.get_fe(df, self.graph.parameter)
         if measdate:
             if switch_nums > 0:

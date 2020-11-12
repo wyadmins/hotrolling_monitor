@@ -48,6 +48,6 @@ def generate_graph(x):
     c = timeseries_pb2.KafkaAiDataDto()
     content = gzip.decompress(base64.b64decode(x))
     c.ParseFromString(content)
-    graph = Graph.graph_from_json(x)
+    graph = Graph.graph_from_protobuf(c)
     graph.data = c.Data
     return graph

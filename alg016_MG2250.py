@@ -29,7 +29,7 @@ class Alg016:
         self.graph = graph
 
     def get_alarm(self):
-        df = self.graph.get_data_from_api(['sv_ref', 'sv_act'])
+        df = self.graph.get_data_from_protobuf(['sv_ref', 'sv_act'])
         if df.empty:
             return
         algparas = self.graph.parameter

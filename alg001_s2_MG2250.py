@@ -44,7 +44,7 @@ class Alg001_S2:
 
     def get_curr_avg_and_std(self):
 
-        df = self.graph.get_data_from_api(['spd_ref', 'curr_act', 'torq_act', 'hook_status'])
+        df = self.graph.get_data_from_protobuf(['spd_ref', 'curr_act', 'torq_act', 'hook_status'])
         algparas = self.graph.parameter
 
         curr_avg = []

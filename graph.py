@@ -50,7 +50,7 @@ class Graph:
               starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
 
     @staticmethod
-    def graph_from_probuf(data):
+    def graph_from_protobuf(data):
         nodes = ''
         datasource = ''
         indices = []
@@ -95,8 +95,6 @@ class Graph:
         df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(self.data[0].time), unit='ms')
         df.dt, df.num_per_sec = com_util.get_dt(df.index)
         return df
-
-
 
     def read_cache(self):
         url = f"http://192.168.1.15:8130/api/services/app/V1_Ai/GetAiCache?DeviceId={self.deviceid}&AlgCode={self.algcode}"

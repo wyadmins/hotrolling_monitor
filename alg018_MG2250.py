@@ -24,7 +24,7 @@ class Alg018:
         self.graph = graph
 
     def get_alarm(self):
-        df = self.graph.get_data_from_api(['on_off', 'flow_detection'])
+        df = self.graph.get_data_from_protobuf(['on_off', 'flow_detection'])
 
         if df.empty:
             return

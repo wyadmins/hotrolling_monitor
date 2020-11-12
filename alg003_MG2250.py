@@ -73,7 +73,7 @@ class Alg003:
             measdate2, avg_pressure2, std_pressure2, max_pressure2, min_pressure2
 
     def execute(self):
-        df = self.graph.get_data_from_api(['gap_act', 'pis_pressure', 'rod_pressure'])
+        df = self.graph.get_data_from_protobuf(['gap_act', 'pis_pressure', 'rod_pressure'])
         measdate1, avg_pressure1, std_pressure1, max_pressure1, min_pressure1, \
         measdate2, avg_pressure2, std_pressure2, max_pressure2, min_pressure2 \
             = self.get_fe(df, self.graph.parameter)

@@ -79,7 +79,7 @@ class Alg005:
     def execute(self):
         try:
             algparas = self.graph.parameter
-            df = self.graph.get_data_from_api(['zeroing_run', 'hgc_force_os', 'hgc_pos_os', 'hgc_force_ds', 'hgc_pos_ds'])
+            df = self.graph.get_data_from_protobuf(['zeroing_run', 'hgc_force_os', 'hgc_pos_os', 'hgc_force_ds', 'hgc_pos_ds'])
             df_in_zeroing = df[1 == df['zeroing_run']]
 
             if df_in_zeroing.empty:

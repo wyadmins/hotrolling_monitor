@@ -71,7 +71,7 @@ class Alarm_temp_predict:
                 self.graph.events.append(event)
 
     def execute(self):
-        df = self.graph.get_data_from_api(['temp_in', 'temp_out', 'A', 'B', 'C',
+        df = self.graph.get_data_from_protobuf(['temp_in', 'temp_out', 'A', 'B', 'C',
                                            'temp_bearing_front', 'temp_bearing_rear'])
         paras = self.graph.parameter
 

@@ -65,7 +65,7 @@ class Alg014:
         return measdate, std_force, avg_force, max_force, min_force
 
     def execute(self):
-        df = self.graph.get_data_from_api(['agc_active', 'os_lc', 'os_pt', 'ds_lc', 'ds_pt'])
+        df = self.graph.get_data_from_protobuf(['agc_active', 'os_lc', 'os_pt', 'ds_lc', 'ds_pt'])
 
         df['force'] = df['os_lc']
         measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
