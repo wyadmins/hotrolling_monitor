@@ -26,7 +26,7 @@ import numpy as np
 from graph import Index
 import pandas as pd
 
-class Alg033:
+class Alg004_S6:
     def __init__(self, graph):
         self.graph = graph
 

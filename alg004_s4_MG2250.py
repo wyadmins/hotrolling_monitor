@@ -19,14 +19,14 @@ Outputs:
 ---------------------
 伺服阀设定均值 13100
 ====================
-Author: chenqiliang
+Author: chengqiliang
 """
 
 import numpy as np
 from graph import Index
 import com_util
 
-class Alg031:
+class Alg004_S4:
     def __init__(self, graph):
         self.graph = graph
 

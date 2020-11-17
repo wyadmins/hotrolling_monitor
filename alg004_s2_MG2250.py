@@ -3,8 +3,8 @@ Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度 (实现版本2)
 ==============
 Input Signals (3):
-* ???：balance_on
-* ???：check_value
+* 平衡开：balance_on
+* 检测值：check_value
 * 伺服阀开口度：sv_out
 
 Parameter Configs (2)：

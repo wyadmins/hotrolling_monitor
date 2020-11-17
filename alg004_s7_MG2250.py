@@ -27,7 +27,8 @@ import numpy as np
 from graph import Index
 import com_util
 
-class Alg034:
+
+class Alg004_S7:
     def __init__(self, graph):
         self.graph = graph
 

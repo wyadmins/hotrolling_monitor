@@ -29,7 +29,7 @@ import numpy as np
 from graph import Index
 import com_util
 
-class Alg030:
+class Alg004_S3:
     def __init__(self, graph):
         self.graph = graph
 

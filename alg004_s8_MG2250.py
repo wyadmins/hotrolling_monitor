@@ -19,14 +19,14 @@ Outputs:
 ---------------------
 伺服阀设定均值 13500
 ====================
-Author: chenqiliang
+Author: chengqiliang
 """
 
 import numpy as np
 from graph import Index
 import com_util
 
-class Alg035:
+class Alg004_S8:
     def __init__(self, graph):
         self.graph = graph
 
@@ -53,9 +53,6 @@ class Alg035:
             measdate.append(df.index[stidx + n])
             curr_avga.append(np.mean(df.a_ref[stidx + n: edidx - n]))
             curr_avgb.append(np.mean(df.b_ref[stidx + n: edidx - n]))
-
-
-
         value_avg = np.mean(curr_avga) + np.mean(curr_avgb)
 
         index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "13500",

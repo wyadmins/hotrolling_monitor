@@ -35,7 +35,6 @@ class Alg018:
         if np.sum(diff) * df.dt > algparas[0]:
             self.graph.set_alarm('流量保护开关检测异常！')
 
-
     def execute(self):
         self.get_alarm()
 

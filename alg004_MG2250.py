@@ -8,7 +8,7 @@ Input Signals (4):
 * 速度给定值: speed_ref
 * 伺服阀前截止阀: cutoff_valve
 
-Parameter Configs (2)：
+Parameter Configs (3)：
 * 实际辊缝给定下限
 * 实际辊缝给定上限
 * 稳态持续时间下限(秒)
