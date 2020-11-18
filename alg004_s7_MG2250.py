@@ -2,12 +2,12 @@
 Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度（R1-F7 弯辊）
 ==============
-Input Signals :
+Input Signals (3):
 * 伺服阀设定值：sv_out
 * 压力实际值：pressure_act
 * 伺服阀前截止阀: cutoff_valve
 
-Parameter Configs :
+Parameter Configs (3):
 * 位置实际值给定下限
 * 位置实际值给定上限
 * 稳态持续时间下限(秒)

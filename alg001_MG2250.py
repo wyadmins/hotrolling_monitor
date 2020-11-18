@@ -63,7 +63,7 @@ class Alg001:
                     curr_avg.append(np.mean(df.curr_act[stidx+n1: edidx-n2]))  # 切头切尾
                     curr_std.append(np.std(df.curr_act[stidx+n1: edidx-n2]))
                     curr_max.append(np.max(df.curr_act[stidx+n1: edidx-n2]))
-                    curr_min.append(np.min(df.curr_act[stidx+ n1: edidx-n2]))
+                    curr_min.append(np.min(df.curr_act[stidx+n1: edidx-n2]))
                     torq_avg.append(np.mean(df.torq_act[stidx+n1: edidx-n2]))  # 切头切尾
                     torq_std.append(np.std(df.torq_act[stidx+n1: edidx-n2]))
                     torq_max.append(np.max(df.torq_act[stidx+n1: edidx-n2]))

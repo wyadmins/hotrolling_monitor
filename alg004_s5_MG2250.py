@@ -2,13 +2,13 @@
 Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度（夹送辊/ FSB夹送辊）
 ==============
-Input Signals :
+Input Signals (4):
 * 伺服阀设定值：sv_out
 * 位置设定值: value_ref
 * 位置实际值：value_act
 * 伺服阀前截止阀: cutoff_valve
 
-Parameter Configs :
+Parameter Configs (3):
 * 位置实际值给定下限
 * 位置实际值给定上限
 * 稳态持续时间下限(秒)

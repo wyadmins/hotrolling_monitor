@@ -2,7 +2,7 @@
 Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度 (F1-F7 AGC)
 ==============
-Input Signals:
+Input Signals (6):
 * 伺服阀A设定值：a_ref
 * 伺服阀A前截止阀：a_cutoff_valve
 * 伺服阀B设定值：b_ref
@@ -10,7 +10,7 @@ Input Signals:
 * 位置实际值：value_act
 * 参考咬钢信号：single
 
-Parameter Configs：
+Parameter Configs (2)：
 * 稳态时长下限（s）
 * 稳态窗口变异系数门限：范围（0-5）
 ==============

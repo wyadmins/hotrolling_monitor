@@ -2,13 +2,13 @@
 Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度(SSP)
 ==============
-Input Signals :
+Input Signals (4):
 * 位置实际值：gap_act
 * 位置设定值: gap_ref
 * 伺服阀开口度：sv_out
 * 伺服阀前截止阀: cutoff_valve
 
-Parameter Configs :
+Parameter Configs (4):
 * 稳态持续时间下限(秒)
 * 稳态窗口变异系数门限：范围（0-5）
 * 位置设定值给定下限

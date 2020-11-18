@@ -2,7 +2,7 @@
 Provides:
 伺服阀泄漏指标，计算稳态伺服阀开口度（AWC/AGC/支撑辊）
 ==============
-Input Signals (Optional):
+Input Signals (Optional]):
 * 伺服阀开口度：sv_out
 * 实际辊缝值：gap_act
 * 伺服阀前截止阀: cutoff_valve
