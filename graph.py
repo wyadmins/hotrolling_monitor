@@ -22,8 +22,8 @@ class Graph:
         self.deviceid = deviceid
         self.devicename = devicename
         self.aiid = aiid
-        self.parameter = parameters
-        self.alarm_thd = alarm_configs
+        self.parameter = [eval(x) for x in parameters.split(',')]
+        self.alarm_thd = dict(alarm_configs)
 
     @staticmethod
     def graph_from_json(data):
@@ -94,6 +94,7 @@ class Graph:
         df.columns = tags
         df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(self.data[0].time), unit='ms')
         df.dt, df.num_per_sec = com_util.get_dt(df.index)
+        self.data = df.to_json()
         return df
 
     def read_cache(self):
@@ -113,8 +114,12 @@ class Graph:
         计算指标固定门限报警
         """
         for indice in self.indices:
+            if not self.alarm_thd:
+                continue
+
             if [-1, -1] == self.alarm_thd.get(indice.feid1st):
                 continue
+
             if indice.value1st > self.alarm_thd.get(indice.feid1st)[0] or indice.value1st < self.alarm_thd.get(indice.feid1st)[1]:
                 event = Event({'assetid': self.deviceid, 'aiid': self.aiid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
                 self.events.append(event)

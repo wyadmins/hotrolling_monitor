@@ -2,7 +2,7 @@
 Provides:
 电机空载电流均值/标准差
 ==============
-Input Signals (3):
+Input Signals (4):
 * 钩子状态（放下状态）
 * 速度给定
 * 实际电流
