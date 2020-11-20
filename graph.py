@@ -131,7 +131,7 @@ class Index:
     """
     def __init__(self, value):
         self.assetid = value['assetid']
-        self.meastime1st = str(value['meastime1st'])
+        self.meastime1st = value['meastime1st'].strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         self.feid1st = value['feid1st']
         self.value1st = value['value1st']
         self.indices2nd = value.get('indices2nd', [])
