@@ -40,12 +40,16 @@ Outputs:
 
 import numpy as np
 from graph import Index
-from com_util import find_1_to_0
 
 
 class Alg014:
     def __init__(self, graph):
         self.graph = graph
+
+    @staticmethod
+    def find_steel_throwing_signal(agc_active):
+        indexs = np.where(np.diff(agc_active) < 0)[0] + 1
+        return indexs
 
     def get_fe(self, df):
         duration = self.graph.parameter[0]
@@ -55,12 +59,20 @@ class Alg014:
         min_force = []
         measdate = []
         if not df.empty:
-            indexs = find_1_to_0(df['agc_active'])
+            indexs = self.find_steel_throwing_signal(df['agc_active'])
             for i in indexs:
-                std_force.append(np.std(df['force'][i: i+duration*df.num_per_sec]))
-                avg_force.append(np.mean(df['force'][i:i+duration*df.num_per_sec]))
-                max_force.append(np.max(df['force'][i: i+duration*df.num_per_sec]))
-                min_force.append(np.min(df['force'][i: i+duration*df.num_per_sec]))
+                edidx = i + duration * df.num_per_sec
+                if df.shape[0] < edidx:
+                    continue
+
+                if max(df['agc_active'][i + 1: edidx]) > 0:  # 抛钢后时间足够长
+                    continue
+
+                delay = int(0.1 * df.num_per_sec)  # 抛钢后延迟计算
+                std_force.append(np.std(df['force'][i + delay: edidx]))
+                avg_force.append(np.mean(df['force'][i + delay: edidx]))
+                max_force.append(np.max(df['force'][i + delay: edidx]))
+                min_force.append(np.min(df['force'][i + delay: edidx]))
                 measdate.append(df.index[i])
         return measdate, std_force, avg_force, max_force, min_force
 
