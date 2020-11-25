@@ -4,8 +4,8 @@ Provides:
 ==============
 Input Signals (4):
 * 实际辊缝值：gap_act
-* 伺服阀开口度：sv_out
 * 速度给定值: speed_ref
+* 伺服阀开口度：sv_out
 * 伺服阀前截止阀: cutoff_valve
 
 Parameter Configs (3)：
@@ -54,7 +54,7 @@ class Alg004:
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
     def execute(self):
-        df = self.graph.get_data_from_protobuf(['gap_act', 'sv_out', 'speed_ref', 'cutoff_valve'])
+        df = self.graph.get_data_from_protobuf(['gap_act', 'speed_ref', 'sv_out', 'cutoff_valve'])
         measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out = self.get_fe(df, self.graph.parameter)
         for i, meastime in enumerate(measdate):
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10400",
