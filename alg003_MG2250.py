@@ -50,7 +50,7 @@ class Alg003:
         max_pressure2 = []
         min_pressure2 = []
         if not df.empty:
-            idx = (df.gap_act >= algparas[0]) & (df.gap_act <= [1])
+            idx = (df.gap_act >= algparas[0]) & (df.gap_act <= algparas[1])
             re_iter = com_util.Reg.finditer(idx, algparas[2] * df.num_per_sec)
             for i in re_iter:
                 [stidx, edidx] = i.span()

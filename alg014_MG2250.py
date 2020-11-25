@@ -68,7 +68,7 @@ class Alg014:
                 if max(df['agc_active'][i + 1: edidx]) > 0:  # 抛钢后时间足够长
                     continue
 
-                delay = int(0.1 * df.num_per_sec)  # 抛钢后延迟计算
+                delay = int(0.5 * df.num_per_sec)  # 抛钢后延迟计算
                 std_force.append(np.std(df['force'][i + delay: edidx]))
                 avg_force.append(np.mean(df['force'][i + delay: edidx]))
                 max_force.append(np.max(df['force'][i + delay: edidx]))
