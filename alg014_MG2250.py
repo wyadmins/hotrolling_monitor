@@ -81,64 +81,68 @@ class Alg014:
 
         df['force'] = df['os_lc']
         measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
-        if measdate:
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14000),
-                           'value1st':  std_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14001),
-                           'value1st':  avg_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14002),
-                           'value1st':  max_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14003),
-                           'value1st':  min_force, 'indices2nd': []})
-            self.graph.indices.append(index)
+        if len(measdate) > 0:
+            for i, meastime in enumerate(measdate):
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14000),
+                               'value1st':  std_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14001),
+                               'value1st':  avg_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14002),
+                               'value1st':  max_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14003),
+                               'value1st':  min_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
 
         df['force'] = df['os_pt']
         measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
-        if measdate:
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14004),
-                           'value1st':  std_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14005),
-                           'value1st':  avg_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14006),
-                           'value1st':  max_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14007),
-                           'value1st':  min_force, 'indices2nd': []})
-            self.graph.indices.append(index)
+        if len(measdate) > 0:
+            for i, meastime in enumerate(measdate):
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14004),
+                               'value1st':  std_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14005),
+                               'value1st':  avg_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14006),
+                               'value1st':  max_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14007),
+                               'value1st':  min_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
 
         df['force'] = df['ds_lc']
-        if measdate:
-            measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14008),
-                           'value1st':  std_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14009),
-                           'value1st':  avg_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14010),
-                           'value1st':  max_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14011),
-                           'value1st':  min_force, 'indices2nd': []})
-            self.graph.indices.append(index)
+        if len(measdate) > 0:
+            for i, meastime in enumerate(measdate):
+                measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14008),
+                               'value1st':  std_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14009),
+                               'value1st':  avg_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14010),
+                               'value1st':  max_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14011),
+                               'value1st':  min_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
 
         df['force'] = df['ds_pt']
-        if measdate:
-            measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14012),
-                           'value1st':  std_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14013),
-                           'value1st':  avg_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14014),
-                           'value1st':  max_force, 'indices2nd': []})
-            self.graph.indices.append(index)
-            index = Index({'assetid': self.graph.deviceid, 'meastime1st': measdate, 'feid1st': str(14015),
-                           'value1st':  min_force, 'indices2nd': []})
-            self.graph.indices.append(index)
+        if len(measdate) > 0:
+            for i, meastime in enumerate(measdate):
+                measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14012),
+                               'value1st':  std_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14013),
+                               'value1st':  avg_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14014),
+                               'value1st':  max_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14015),
+                               'value1st':  min_force[i], 'indices2nd': []})
+                self.graph.indices.append(index)
