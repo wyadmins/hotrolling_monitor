@@ -5,8 +5,8 @@ Provides:
 Input Signals (5):
 * zeroing_run:  零调标志位
 * hgc_force_os: 操作侧轧制力
-* hgc_pos_os:   操作侧HGC位置
 * hgc_force_ds: 驱动侧轧制力
+* hgc_pos_os:   操作侧HGC位置
 * hgc_pos_ds:   驱动侧HGC位置
 
 
@@ -36,7 +36,8 @@ class Alg005:
     def __init__(self, graph):
         self.graph = graph
 
-    def regexp_monotrend(self, trend, lower_limit, upper_limit, duration, sign1):
+    @staticmethod
+    def regexp_monotrend(trend, lower_limit, upper_limit, duration, sign1):
         if sign1 == '+':
             sign1 = 1
         else:
@@ -56,8 +57,8 @@ class Alg005:
                 ed.append(edidx)
         return st, ed
 
-
-    def get_stiffness(self, stidx, edidx, df):
+    @staticmethod
+    def get_stiffness(stidx, edidx, df):
         measdate = []
         stiffness = []
         avg_stiffness = []
@@ -79,7 +80,7 @@ class Alg005:
     def execute(self):
         try:
             algparas = self.graph.parameter
-            df = self.graph.get_data_from_protobuf(['zeroing_run', 'hgc_force_os', 'hgc_pos_os', 'hgc_force_ds', 'hgc_pos_ds'])
+            df = self.graph.get_data_from_protobuf(['zeroing_run', 'hgc_force_os', 'hgc_force_ds',  'hgc_pos_os', 'hgc_pos_ds'])
             df_in_zeroing = df[1 == df['zeroing_run']]
 
             if df_in_zeroing.empty:
