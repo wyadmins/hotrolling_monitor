@@ -91,16 +91,16 @@ class Alg005:
             [stidxs, edidxs] = self.regexp_monotrend(df_os['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
             [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df_os)
             for i, meastime in enumerate(meadate):
-                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50000",
-                               'value1st': avg_stiffness[i], 'indices2nd': stiffness})
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50000", 'value1st': avg_stiffness[i],
+                               'indices2nd': {'feid': "500001", "meastime": ['1', '2', '3', '4', '5'], 'value': stiffness[i]}})
                 self.graph.indices.append(index)
             # 驱动侧刚度计算
             df_ds = df_in_zeroing[['hgc_force_ds', 'hgc_pos_ds']].rename(columns={'hgc_force_ds': 'hgc_force', 'hgc_pos_ds': 'hgc_position'})
             [stidxs, edidxs] = self.regexp_monotrend(df_ds['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
             [meadate, stiffness, avg_stiffness] = self.get_stiffness(stidxs, edidxs, df_ds)
             for i, meastime in enumerate(meadate):
-                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50001",
-                               'value1st': avg_stiffness[i], 'indices2nd': stiffness})
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50001", 'value1st': avg_stiffness[i],
+                               'indices2nd': {'feid': "500011", "meastime": ['1', '2', '3', '4', '5'], 'value': stiffness[i]}})
                 self.graph.indices.append(index)
 
         except Exception as _:
