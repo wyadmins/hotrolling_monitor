@@ -6,18 +6,17 @@ Input Signals (2):
 * 仪表1信号：signal1
 * 仪表2信号：signal2
 
-Parameter Configs (6)：
+Parameter Configs (4)：
 *  信号类型：模拟量 -> 1 , 0/1型量 -> 2
 *  模拟量偏差计算门限
 *  模拟量偏差门限（%）
-*  0-1量报警点数要求
 *  0-1量报警时长要求（s）
 
 ==============
 Outputs:
 指标   |  指标id
 ---------------------
-
+*  双仪表偏差：  15000
 """
 
 
@@ -53,7 +52,7 @@ class Alg015:
                     event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
                     self.graph.events.append(event)
 
-    def get_alarm_logical(self, p4, p5):
+    def get_alarm_logical(self, p4):
         """
         0-1型信号
         """
@@ -61,15 +60,15 @@ class Alg015:
         if not df.empty:
             n = np.sum(np.abs(df['signal1'] - df['signal2']))
             t = n * df.dt
-            if n > p4 and t > p5:
-                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '报警：双仪表数值不匹配！'})
+            if t > p4:
+                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
                 self.graph.events.append(event)
 
     def execute(self):
-        [p1, p2, p3, p4, p5] = self.graph.parameter
+        [p1, p2, p3, p4] = self.graph.parameter
         if 1 == p1:
             self.get_alarm_analogs(p2, p3)   # 模拟量信号双仪表检测
         elif 2 == p1:
-            self.get_alarm_logical(p4, p5)   # 0/1类型信号双仪表检测
+            self.get_alarm_logical(p4)   # 0/1类型信号双仪表检测
 
 
