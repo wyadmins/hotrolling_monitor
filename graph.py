@@ -55,7 +55,7 @@ class Graph:
         message2dict = dict(message)
         alarm_thd = dict()
         for k, v in message2dict.items():
-            alarm_thd[k] = message2dict[k].data
+            alarm_thd[k] = list(message2dict[k].data)
         return alarm_thd
 
     @staticmethod
