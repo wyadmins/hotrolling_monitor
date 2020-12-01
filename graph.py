@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import com_util
 import time
+from datetime import timedelta
 
 
 class Graph:
@@ -50,6 +51,14 @@ class Graph:
               starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
 
     @staticmethod
+    def parsing_alarm_thd(message):
+        message2dict = dict(message)
+        alarm_thd = dict()
+        for k, v in message2dict.items():
+            alarm_thd[k] = message2dict[k].data
+        return alarm_thd
+
+    @staticmethod
     def graph_from_protobuf(data):
         nodes = ''
         datasource = ''
@@ -57,15 +66,15 @@ class Graph:
         events = []
         datasourcetimes = ''
         exceptions = []
-        starttime = data.starttime.ToJsonString()
-        endtime = data.endtime.ToJsonString()
+        starttime = str(data.starttime.ToDatetime()+timedelta(hours=8))
+        endtime = str(data.endtime.ToDatetime()+timedelta(hours=8))
         channelid = [tag.ChannelId for tag in data.tags]
         algcode = data.algCode
         deviceid = data.deviceid
         devicename = data.devicename
         aiid = data.aiid
         parameters = data.parameter
-        alarm_configs = data.alarm_configs
+        alarm_configs = [] if not data.alarm_configs else Graph.parsing_alarm_thd(data.alarm_configs)
 
         return Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
               starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
@@ -97,6 +106,17 @@ class Graph:
         self.data = df.to_json()
         return df
 
+    # def get_data_from_protobuf(self, tags):
+    #     df = pd.DataFrame({})
+    #     for k, v in self.data.items():
+    #         df[k] = list(v.values())
+    #     df.columns = tags
+    #     t = [50] * df.shape[0]
+    #     t[0] = 0
+    #     df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(t), unit='ms')
+    #     df.dt, df.num_per_sec = com_util.get_dt(df.index)
+    #     return df
+
     def read_cache(self):
         url = f"http://192.168.1.15:8130/api/services/app/V1_Ai/GetAiCache?DeviceId={self.deviceid}&AlgCode={self.algcode}"
         data = requests.get(url).json()
@@ -113,14 +133,18 @@ class Graph:
         """
         计算指标固定门限报警
         """
+        if not self.alarm_thd:
+            return
+
         for indice in self.indices:
-            if not self.alarm_thd:
+            if not self.alarm_thd.get(indice.feid1st):
                 continue
 
             if [-1, -1] == self.alarm_thd.get(indice.feid1st):
                 continue
 
-            if indice.value1st > self.alarm_thd.get(indice.feid1st)[0] or indice.value1st < self.alarm_thd.get(indice.feid1st)[1]:
+            upper_thd, lower_thd = self.alarm_thd.get(indice.feid1st)
+            if (indice.value1st > upper_thd != -1) or (indice.value1st > lower_thd != -1):
                 event = Event({'assetid': self.deviceid, 'aiid': self.aiid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
                 self.events.append(event)
 
@@ -143,10 +167,10 @@ class Event:
     """
     def __init__(self, value):
         self.assetid = value['assetid']
-        self.alarm_time = value['meastime'].strftime('%Y-%m-%d-%H-%M-%S')
+        self.alarm_time = value['meastime']
         self.alarm_level = value['level']
         self.alarm_info = value['info']
-        self.send_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime())
+        self.send_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
 
 
 class Graph_test(Graph):
