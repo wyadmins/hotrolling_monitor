@@ -19,7 +19,7 @@ Outputs:
 *  双仪表偏差：  15000
 """
 
-
+from itertools import groupby
 import numpy as np
 import com_util
 from graph import Event, Index
@@ -58,8 +58,9 @@ class Alg015:
         """
         df = self.graph.get_data_from_protobuf(['signal1', 'signal2'])
         if not df.empty:
-            n = np.sum(np.abs(df['signal1'] - df['signal2']))
-            t = n * df.dt
+            d = np.abs(df['signal1'] - df['signal2'])
+            n_array = [len(list(v)) for k, v in groupby(d) if k == 1]
+            t = max(n_array) * df.dt if n_array else 0
             if t > p4:
                 event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
                 self.graph.events.append(event)
