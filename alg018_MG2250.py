@@ -16,7 +16,9 @@ Outputs:
 ---------------------
 """
 
+from itertools import groupby
 import numpy as np
+from graph import Index, Event
 
 
 class Alg018:
@@ -31,9 +33,15 @@ class Alg018:
 
         algparas = self.graph.parameter
 
-        diff = np.abs(df['on_off'] - df['flow_detection'])
-        if np.sum(diff) * df.dt > algparas[0]:
-            self.graph.set_alarm('流量保护开关检测异常！')
+        d = np.abs(df['on_off'] - df['flow_detection'])
+        n_array = [len(list(v)) for k, v in groupby(d) if k == 1]
+        t = max(n_array) * df.dt if n_array else 0
+        index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "18000",
+                       'value1st': t, 'indices2nd': []})
+        self.graph.indices.append(index)
+        if t > algparas[0]:
+            event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '流量保护开关检测异常！'})
+            self.graph.events.append(event)
 
     def execute(self):
         self.get_alarm()
