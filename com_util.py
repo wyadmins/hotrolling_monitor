@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import numpy as np
 import re
@@ -50,4 +51,64 @@ def generate_graph(x):
     c.ParseFromString(content)
     graph = Graph.graph_from_protobuf(c)
     graph.data = c.Data
+    return graph
+
+
+def generate_graph_offline_protobuf(file):
+    c = timeseries_pb2.KafkaAiDataDto()
+    with open(file, "rb") as fd:
+        content2 = fd.read()
+    content2 = gzip.decompress(content2)
+    c.ParseFromString(content2)
+    graph = Graph.graph_from_protobuf(c)
+    graph.data = c.Data
+    return graph
+
+
+def generate_graph_from_indices(filepath):
+    with open(filepath, encoding='utf8') as f:
+        d = json.loads(f.read())
+    nodes = ''
+    datasource = ''
+    indices = []
+    events = []
+    datasourcetimes = ''
+    exceptions = []
+    starttime = d['starttime']
+    endtime = d['endtime']
+    channelid = [tag['ChannelId'] for tag in d['tags']]
+    algcode = d['algCode']
+    deviceid = d['deviceid']
+    devicename = d['devicename']
+    aiid = d['aiid']
+    parameters = str(d['parameter']).replace(']', '').replace('[', '')
+    alarm_configs = d['alarm_configs']
+    graph = Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
+                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
+    graph.data = d['Data']
+
+    return graph
+
+
+def generate_graph_from_exception(filepath):
+    with open(filepath, encoding='utf8') as f:
+        d = json.loads(f.read())
+    nodes = ''
+    datasource = ''
+    indices = []
+    events = []
+    datasourcetimes = ''
+    exceptions = []
+    starttime = d['starttime']
+    endtime = d['endtime']
+    channelid = [tag['ChannelId'] for tag in d['tags']]
+    algcode = d['algCode']
+    deviceid = d['deviceid']
+    devicename = d['devicename']
+    aiid = d['aiid']
+    parameters = str(d['parameter']).replace(']', '').replace('[', '')
+    alarm_configs = d['alarm_configs']
+    graph = Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
+                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
+    graph.data = json.loads(d['Data'])
     return graph
