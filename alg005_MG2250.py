@@ -94,6 +94,7 @@ class Alg005:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50000", 'value1st': avg_stiffness[i],
                                'indices2nd': [{'feid': "500001", "meastime": ['1', '2', '3', '4', '5'], 'value': stiffness[i]}]})
                 self.graph.indices.append(index)
+            self.graph.set_alarm('刚度指标异常！')
             # 驱动侧刚度计算
             df_ds = df_in_zeroing[['hgc_force_ds', 'hgc_pos_ds']].rename(columns={'hgc_force_ds': 'hgc_force', 'hgc_pos_ds': 'hgc_position'})
             [stidxs, edidxs] = self.regexp_monotrend(df_ds['hgc_force'], algparas[0], algparas[1], algparas[2]*df.num_per_sec, '+')
@@ -102,6 +103,7 @@ class Alg005:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "50001", 'value1st': avg_stiffness[i],
                                'indices2nd': [{'feid': "500011", "meastime": ['1', '2', '3', '4', '5'], 'value': stiffness[i]}]})
                 self.graph.indices.append(index)
+            self.graph.set_alarm('刚度指标异常！')
 
         except Exception as _:
             exc_type, exc_value, exc_traceback = sys.exc_info()

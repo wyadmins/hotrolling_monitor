@@ -95,6 +95,7 @@ class Alg014:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14003),
                                'value1st':  min_force[i], 'indices2nd': []})
                 self.graph.indices.append(index)
+        self.graph.set_alarm('轧制力波动异常，存在轧辊黏铁特征！')
 
         df['force'] = df['os_pt']
         measdate, std_force, avg_force, max_force, min_force = self.get_fe(df)
@@ -112,6 +113,7 @@ class Alg014:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14007),
                                'value1st':  min_force[i], 'indices2nd': []})
                 self.graph.indices.append(index)
+        self.graph.set_alarm('轧制力波动异常，存在轧辊黏铁特征！')
 
         df['force'] = df['ds_lc']
         if len(measdate) > 0:
@@ -129,6 +131,7 @@ class Alg014:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14011),
                                'value1st':  min_force[i], 'indices2nd': []})
                 self.graph.indices.append(index)
+        self.graph.set_alarm('轧制力波动异常，存在轧辊黏铁特征！')
 
         df['force'] = df['ds_pt']
         if len(measdate) > 0:
@@ -146,3 +149,4 @@ class Alg014:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': str(14015),
                                'value1st':  min_force[i], 'indices2nd': []})
                 self.graph.indices.append(index)
+        self.graph.set_alarm('轧制力波动异常，存在轧辊黏铁特征！')

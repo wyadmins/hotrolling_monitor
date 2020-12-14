@@ -101,6 +101,6 @@ class Alg001:
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10107",
                                'value1st': torq_min[i], 'indices2nd': []})
                 self.graph.indices.append(index)
-        self.graph.set_alarm('电机卡阻特征！')
+        self.graph.set_alarm('电机传动负载变大，存在卡阻、润滑不良特征！')
 
 
