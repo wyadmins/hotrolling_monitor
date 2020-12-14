@@ -1,5 +1,5 @@
 import json
-import requests
+#import requests
 import pandas as pd
 import numpy as np
 import com_util
@@ -86,25 +86,47 @@ class Graph:
 
         return json.dumps(self, default=to_dict, ensure_ascii=False)
 
-    def get_data_from_api(self, tags):
-        url = f'http://192.168.1.15:8132/api/Values/GetTagDataGet?AssetId={self.deviceid}&AiId={self.aiid}&Start={self.starttime}&End={self.endtime}'
-        r = requests.get(url)
-        data = json.loads(r.json())
-        df = pd.DataFrame(data['Detail']).T
-        df.columns = tags
-        df.set_index(pd.to_datetime(df.index), inplace=True)
-        df.dt, df.num_per_sec = com_util.get_dt(df.index)
-        return df
+    # def get_data_from_protobuf(self, tags):
+    #     df = pd.DataFrame({})
+    #     for i, x in enumerate(self.data):
+    #         df[i] = list(x.data)
+    #     df.columns = tags
+    #     df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(self.data[0].time), unit='ms')
+    #     df.dt, df.num_per_sec = com_util.get_dt(df.index)
+    #     self.data = df.to_json()
+    #     return df
 
     def get_data_from_protobuf(self, tags):
-        df = pd.DataFrame({})
+        timeseries_list = []
+        max_fs = 0
         for i, x in enumerate(self.data):
-            df[i] = list(x.data)
+            index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(x.time), unit='ms')
+            max_fs = max(np.abs(x.time))
+            s = pd.Series(x.data, index=index).sort_index()
+            timeseries_list.append(s)
+        st_index = min([time_index.index[0] for time_index in timeseries_list])
+        end_index = min([time_index.index[-1] for time_index in timeseries_list])
+        timeindexSlice = pd.date_range(start=st_index, end=end_index, freq='50ms')
+        df = pd.DataFrame()
+        for itags, timeseries in enumerate(timeseries_list):
+            df[tags[itags]] = timeseries_list[itags].reindex(timeindexSlice, method='nearest', tolerance='100ms')
+        df.dropna(how='any', inplace=True)
         df.columns = tags
-        df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(self.data[0].time), unit='ms')
         df.dt, df.num_per_sec = com_util.get_dt(df.index)
         self.data = df.to_json()
+        self.max_fs = int(max_fs)
         return df
+
+    # def get_data_from_protobuf(self, tags):
+    #     df = pd.DataFrame({})
+    #     for k, v in json.loads(self.data).items():
+    #         df[k] = list(v.values())
+    #     df.columns = tags
+    #     t = [50] * df.shape[0]
+    #     t[0] = 0
+    #     df.index = pd.to_datetime(self.starttime) + pd.to_timedelta(np.cumsum(t), unit='ms')
+    #     df.dt, df.num_per_sec = com_util.get_dt(df.index)
+    #     return df
 
     # def get_data_from_protobuf(self, tags):
     #     df = pd.DataFrame({})
@@ -117,17 +139,17 @@ class Graph:
     #     df.dt, df.num_per_sec = com_util.get_dt(df.index)
     #     return df
 
-    def read_cache(self):
-        url = f"http://192.168.1.15:8130/api/services/app/V1_Ai/GetAiCache?DeviceId={self.deviceid}&AlgCode={self.algcode}"
-        data = requests.get(url).json()
-        cache = data['data']['cache']
-        return cache
-
-    def set_cache(self, cache):
-        url = 'http://192.168.1.15:8130/api/services/app/V1_Ai/CreateOrEditAiCache'
-        data = '{"deviceId": "%s","algCode": "%s","cache": "%s"}' % (self.deviceid, self.algcode, cache)
-        rep = requests.post(url=url, data=data, headers={'Content-Type': 'application/json'})
-        return rep.ok
+    # def read_cache(self):
+    #     url = f"http://192.168.1.15:8130/api/services/app/V1_Ai/GetAiCache?DeviceId={self.deviceid}&AlgCode={self.algcode}"
+    #     data = requests.get(url).json()
+    #     cache = data['data']['cache']
+    #     return cache
+    #
+    # def set_cache(self, cache):
+    #     url = 'http://192.168.1.15:8130/api/services/app/V1_Ai/CreateOrEditAiCache'
+    #     data = '{"deviceId": "%s","algCode": "%s","cache": "%s"}' % (self.deviceid, self.algcode, cache)
+    #     rep = requests.post(url=url, data=data, headers={'Content-Type': 'application/json'})
+    #     return rep.ok
 
     def set_alarm(self, alarm_info='无报警明细'):
         """
