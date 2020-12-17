@@ -53,10 +53,10 @@ class Alg004:
                 [stidx, edidx] = i.span()
                 if edidx - stidx > n:
                     measdate.append(df.index[stidx + int(n/5)])
-                    avg_sv_out.append(np.mean(df.sv_out[stidx+int(n/5):edidx]))
-                    std_sv_out.append(np.std(df.sv_out[stidx+int(n/5):edidx]))
-                    max_sv_out.append(np.max(df.sv_out[stidx+int(n/5):edidx]))
-                    min_sv_out.append(np.min(df.sv_out[stidx+int(n/5):edidx]))
+                    avg_sv_out.append(np.mean(df.sv_out[stidx+int(n/5):edidx-int(n/5)]))
+                    std_sv_out.append(np.std(df.sv_out[stidx+int(n/5):edidx-int(n/5)]))
+                    max_sv_out.append(np.max(df.sv_out[stidx+int(n/5):edidx-int(n/5)]))
+                    min_sv_out.append(np.min(df.sv_out[stidx+int(n/5):edidx-int(n/5)]))
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
     def execute(self):
