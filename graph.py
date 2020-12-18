@@ -167,7 +167,12 @@ class Graph:
 
             upper_thd, lower_thd = self.alarm_thd.get(indice.feid1st)
             if (indice.value1st > upper_thd != -1) or (indice.value1st > lower_thd != -1):
-                event = Event({'assetid': self.deviceid, 'aiid': self.aiid, 'meastime': indice.meastime1st, 'level': 1, 'info': '报警：'+alarm_info})
+                event = Event({'assetid': self.deviceid,
+                               'assetname': self.devicename,
+                               'aiid': self.aiid,
+                               'meastime': indice.meastime1st,
+                               'level': 1,
+                               'info': '报警：'+alarm_info})
                 self.events.append(event)
 
 
@@ -188,8 +193,10 @@ class Event:
     报警事件
     """
     def __init__(self, value):
+        self.aiid = value['aiid']
         self.assetid = value['assetid']
-        self.alarm_time = str(value['meastime'])[:-3]
+        self.assetname = value['assetname']
+        self.alarm_time = str(value['meastime'])[:-4]
         self.alarm_level = value['level']
         self.alarm_info = value['info']
         self.send_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
