@@ -49,7 +49,9 @@ class Alg015:
                 self.graph.indices.append(index)
 
                 if r > p3:
-                    event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
+                    event = Event({'assetid': self.graph.deviceid, 'assetname': self.graph.devicename,
+                                   'aiid': self.graph.aiid,
+                                   'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
                     self.graph.events.append(event)
 
     def get_alarm_logical(self, p4):
@@ -62,7 +64,9 @@ class Alg015:
             n_array = [len(list(v)) for k, v in groupby(d) if k == 1]
             t = max(n_array) * df.dt if n_array else 0
             if t > p4:
-                event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
+                event = Event({'assetid': self.graph.deviceid, 'assetname': self.graph.devicename,
+                               'aiid': self.graph.aiid,
+                               'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
                 self.graph.events.append(event)
 
     def execute(self):
