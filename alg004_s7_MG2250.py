@@ -28,6 +28,8 @@ from graph import Index
 import com_util
 
 
+
+
 class Alg004_S7:
     def __init__(self, graph):
         self.graph = graph
@@ -39,6 +41,7 @@ class Alg004_S7:
         max_sv_out = []
         min_sv_out = []
         measdate = []
+
         if not df.empty:
             idx = (df['pressure_act'] >= algparas[0]) & (df['pressure_act'] <= algparas[1]) & (df['cutoff_valve'] == 1)
             re_iter = com_util.Reg.finditer(idx, algparas[2] * df.num_per_sec)

@@ -51,7 +51,7 @@ class Alg017:
 
         rolling = df['s1'].rolling(int(algparas[0] * df.num_per_sec), center=True)
         roll_cv = np.abs(rolling.std() / rolling.mean())   # 计算窗口变异系数
-        idx1 = roll_cv < algparas[1]
+        idx1 = roll_cv < algparas[1]/100
 
         if len(idx1) < 1:
             return
@@ -70,8 +70,8 @@ class Alg017:
 
         if np.isnan(min_cv):   # 数据包不包含稳态工况
             return
-
-        stidx = roll_cv[idx1 & idx2].argmin()
+        stidx = np.where(roll_cv.index == roll_cv[idx1 & idx2].argmin(skipna=True))[0][0]
+        # stidx = roll_cv[idx1 & idx2].argmin()
         edidx = stidx + int(np.ceil(algparas[0] * df.num_per_sec))
 
         n = (edidx - stidx) // 5  # 对稳态段切头尾

@@ -7,7 +7,7 @@ Input Signals (6):
 * 伺服阀A前截止阀：a_cutoff_valve
 * 伺服阀B设定值：b_ref
 * 伺服阀B前截止阀：b_cutoff_valve
-* 位置实际值：value_act
+* 位置实际值：gap_act
 * 参考咬钢信号：single
 
 Parameter Configs (2)：
@@ -17,7 +17,10 @@ Parameter Configs (2)：
 Outputs:
 指标   |  指标id
 ---------------------
-伺服阀设定均值 13500
+* 伺服阀开口度均值：  10400
+* 伺服阀开口度标准差：10401
+* 伺服阀开口度最大值：10402
+* 伺服阀开口度最小值：10403
 ====================
 Author: chengqiliang
 """
@@ -25,39 +28,53 @@ Author: chengqiliang
 import numpy as np
 from graph import Index
 import com_util
+import dateutil, pylab,random
+from pylab import *
+import pandas as pd
+from datetime import datetime,timedelta
 
 class Alg004_S8:
     def __init__(self, graph):
         self.graph = graph
 
-    def get_alarm(self):
-        df = self.graph.get_data_from_api(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'value_act', 'single'])
-
-        algparas = self.graph.parameter
-
+    @staticmethod
+    def get_fe(df,  algparas):
+        avg_sv_out = []
+        std_sv_out = []
+        max_sv_out = []
+        min_sv_out = []
         measdate = []
-        curr_avga = []
-        curr_avgb = []
 
-        if df.empty:
-            return
+        if not df.empty:
+            rolling = df['gap_act'].rolling(int(algparas[0] * df.num_per_sec), center=True)
+            roll_cv = np.abs(rolling.std() / rolling.mean())   # 计算窗口变异系数
+            idx = (roll_cv < (algparas[1] / 100)) & (df['a_cutoff_valve'] == 1) & (df['b_cutoff_valve'] == 1) & (df['single'] == 0)
+            re_iter = com_util.Reg.finditer(idx, algparas[0] * df.num_per_sec)
+            for i in re_iter:
+                [stidx, edidx] = i.span()
+                n = (edidx - stidx) // 5
+                measdate.append(df.index[stidx + n])
+                avg_sv_out.append(np.mean(df.a_ref[stidx + n: edidx - n]) + np.mean(df.b_ref[stidx + n: edidx - n]))
+                std_sv_out.append(np.std(df.a_ref[stidx + n: edidx - n]) + np.std(df.b_ref[stidx + n: edidx - n]))
+                max_sv_out.append(np.max(df.a_ref[stidx + n: edidx - n]) + np.max(df.b_ref[stidx + n: edidx - n]))
+                min_sv_out.append(np.min(df.a_ref[stidx + n: edidx - n]) + np.min(df.b_ref[stidx + n: edidx - n]))
+        return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
-        rolling = df['value_act'].rolling(int(algparas[0] * df.num_per_sec), center=True)
-        roll_cv = np.abs(rolling.std() / rolling.mean())   # 计算窗口变异系数
-        idx = (roll_cv < (algparas[1] / 100)) & (df['a_cutoff_valve'] == 1) & (df['b_cutoff_valve'] == 1) & (df['single'] == 0)
-
-        re_iter = com_util.Reg.finditer(idx, algparas[0] * df.num_per_sec)
-        for i in re_iter:
-            [stidx, edidx] = i.span()
-            n = (edidx - stidx) // 5
-            measdate.append(df.index[stidx + n])
-            curr_avga.append(np.mean(df.a_ref[stidx + n: edidx - n]))
-            curr_avgb.append(np.mean(df.b_ref[stidx + n: edidx - n]))
-        value_avg = np.mean(curr_avga) + np.mean(curr_avgb)
-
-        index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "13500",
-                       'value1st': value_avg, 'indices2nd': []})
-        self.graph.indices.append(index)
 
     def execute(self):
-        self.get_alarm()
+        df = self.graph.get_data_from_api(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'gap_act', 'single'])
+        measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out = self.get_fe(df, self.graph.parameter)
+        for i, meastime in enumerate(measdate):
+            index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10400",
+                           'value1st': avg_sv_out[i], 'indices2nd': []})
+            self.graph.indices.append(index)
+            index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10401",
+                           'value1st': std_sv_out[i], 'indices2nd': []})
+            self.graph.indices.append(index)
+            index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10402",
+                           'value1st': max_sv_out[i], 'indices2nd': []})
+            self.graph.indices.append(index)
+            index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10403",
+                           'value1st': min_sv_out[i], 'indices2nd': []})
+            self.graph.indices.append(index)
+        self.graph.set_alarm('伺服阀稳态开口度异常！')

@@ -45,7 +45,7 @@ class Alg021:
             avg_coil_diameter = full_inflation[: n * df.num_per_sec].mean()
 
         # 高温卷统计
-        avg_temp = np.mean(df['in_coil_temp1'][1 == df['bite_steel']])   # 温度均值
+        avg_temp = np.mean(df['in_coil_temp'][1 == df['bite_steel']])   # 温度均值
         if avg_temp > 600:
             high_temp_coil_count = 1
             high_temp_coil_duration = df.dt * sum(1 == df['bite_steel'])

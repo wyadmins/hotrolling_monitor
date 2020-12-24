@@ -27,13 +27,12 @@ import numpy as np
 from graph import Index
 import com_util
 
-
 class Alg004_S2:
     def __init__(self, graph):
         self.graph = graph
 
     def get_fe(self, algparas):
-        df = self.graph.get_data_from_protobuf(['balance_on', 'check_value', 'sv_out'])
+        df = self.graph.get_data_from_api(['balance_on', 'check_value', 'sv_out'])
 
         avg_sv_out = []
         std_sv_out = []
@@ -51,6 +50,7 @@ class Alg004_S2:
                     std_sv_out.append(np.std(df.sv_out[stidx: edidx]))
                     max_sv_out.append(np.max(df.sv_out[stidx: edidx]))
                     min_sv_out.append(np.min(df.sv_out[stidx: edidx]))
+                    
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
     def execute(self):
@@ -68,4 +68,4 @@ class Alg004_S2:
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10403",
                            'value1st': min_sv_out[i], 'indices2nd': []})
             self.graph.indices.append(index)
-        self.graph.set_alarm('液压传动系统参数值异常，存在泄露异常特征！')
+        self.graph.set_alarm('伺服阀稳态开口度异常！')
