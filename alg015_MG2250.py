@@ -48,11 +48,13 @@ class Alg015:
                                'value1st': r, 'indices2nd': []})
                 self.graph.indices.append(index)
 
-                if r > p3:
-                    event = Event({'assetid': self.graph.deviceid, 'assetname': self.graph.devicename,
-                                   'aiid': self.graph.aiid,
-                                   'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
-                    self.graph.events.append(event)
+                self.graph.set_alarm('双仪表数值不匹配！')
+
+                # if r > p3:
+                #     event = Event({'assetid': self.graph.deviceid, 'assetname': self.graph.devicename,
+                #                    'aiid': self.graph.aiid,
+                #                    'meastime': df.index[0], 'level': 1, 'info': '双仪表数值不匹配！'})
+                #     self.graph.events.append(event)
 
     def get_alarm_logical(self, p4):
         """

@@ -29,6 +29,7 @@ import numpy as np
 from graph import Index
 import com_util
 
+
 class Alg004_S4:
     def __init__(self, graph):
         self.graph = graph
@@ -41,7 +42,7 @@ class Alg004_S4:
         min_sv_out = []
         measdate = []
         if not df.empty:
-            idx1 = (df['a_cutoff_valve'] == 1) & (df['b_cutoff_valve'] == 0) & (df['value_act'] > algparas[0]) & (df['value_act'] < algparas[1])
+            idx1 = (df['a_cutoff_valve'] == 1) & (df['value_act'] > algparas[0]) & (df['value_act'] < algparas[1])
             re_iter = com_util.Reg.finditer(idx1, algparas[2] * df.num_per_sec)
             for i in re_iter:
                 [stidx, edidx] = i.span()
@@ -51,20 +52,21 @@ class Alg004_S4:
                 std_sv_out.append(np.std(df.a_ref[stidx + n: edidx - n]))
                 max_sv_out.append(np.max(df.a_ref[stidx + n: edidx - n]))
                 min_sv_out.append(np.min(df.a_ref[stidx + n: edidx - n]))
-            idx2 = (df['b_cutoff_valve'] == 1) & (df['a_cutoff_valve'] == 0) & (df['value_act'] > algparas[0]) & (df['value_act'] < algparas[1])
+            idx2 = (df['b_cutoff_valve'] == 1) & (df['value_act'] > algparas[0]) & (df['value_act'] < algparas[1])
             re_iter = com_util.Reg.finditer(idx2, algparas[2] * df.num_per_sec)
             for i in re_iter:
                 [stidx, edidx] = i.span()
                 n = (edidx - stidx) // 5
                 measdate.append(df.index[stidx + n])
-                avg_sv_out.append(np.mean(df.a_ref[stidx+n: edidx-n]))
-                std_sv_out.append(np.std(df.a_ref[stidx + n: edidx - n]))
-                max_sv_out.append(np.max(df.a_ref[stidx + n: edidx - n]))
-                min_sv_out.append(np.min(df.a_ref[stidx + n: edidx - n]))
+                avg_sv_out.append(np.mean(df.b_ref[stidx+n: edidx-n]))
+                std_sv_out.append(np.std(df.b_ref[stidx + n: edidx - n]))
+                max_sv_out.append(np.max(df.b_ref[stidx + n: edidx - n]))
+                min_sv_out.append(np.min(df.b_ref[stidx + n: edidx - n]))
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
     def execute(self):
-        df = self.graph.get_data_from_api(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'value_act'])
+        df = self.graph.get_data_from_protobuf(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'value_act'])
+        # df = self.graph.get_data_from_api(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'value_act'])
         measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out = self.get_fe(df, self.graph.parameter)
         for i, meastime in enumerate(measdate):
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10400",
