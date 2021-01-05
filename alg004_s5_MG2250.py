@@ -86,7 +86,7 @@ class Alg004_S5:
                measdate_down, avg_sv_out_down, std_sv_out_down, max_sv_out_down, min_sv_out_down,
 
     def execute(self):
-        df = self.graph.get_data_from_api(['sv_out_up', 'gap_act_up', 'cutoff_valve_up', 'sv_out_down', 'gap_act_down', 'cutoff_valve_down'])
+        df = self.graph.get_data_from_protobuf(['sv_out_up', 'gap_act_up', 'cutoff_valve_up', 'sv_out_down', 'gap_act_down', 'cutoff_valve_down'])
         measdate_up, avg_sv_out_up, std_sv_out_up, max_sv_out_up, min_sv_out_up, \
         measdate_down, avg_sv_out_down, std_sv_out_down, max_sv_out_down, min_sv_out_down, = self.get_fe(df, self.graph.parameter)
         for i, meastime_up in enumerate(measdate_up):

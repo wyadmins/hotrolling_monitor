@@ -27,12 +27,13 @@ import numpy as np
 from graph import Index
 import com_util
 
+
 class Alg004_S2:
     def __init__(self, graph):
         self.graph = graph
 
     def get_fe(self, algparas):
-        df = self.graph.get_data_from_api(['balance_on', 'check_value', 'sv_out'])
+        df = self.graph.get_data_from_protobuf(['balance_on', 'check_value', 'sv_out'])
 
         avg_sv_out = []
         std_sv_out = []

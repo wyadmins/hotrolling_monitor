@@ -60,9 +60,8 @@ class Alg004_S8:
                 min_sv_out.append(np.min(df.a_ref[stidx + n: edidx - n]) + np.min(df.b_ref[stidx + n: edidx - n]))
         return measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out
 
-
     def execute(self):
-        df = self.graph.get_data_from_api(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'gap_act', 'single'])
+        df = self.graph.get_data_from_protobuf(['a_ref', 'a_cutoff_valve', 'b_ref', 'b_cutoff_valve', 'gap_act', 'single'])
         measdate, avg_sv_out, std_sv_out, max_sv_out, min_sv_out = self.get_fe(df, self.graph.parameter)
         for i, meastime in enumerate(measdate):
             index = Index({'assetid': self.graph.deviceid, 'meastime1st': meastime, 'feid1st': "10400",

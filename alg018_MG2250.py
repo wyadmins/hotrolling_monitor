@@ -40,7 +40,10 @@ class Alg018:
                        'value1st': t, 'indices2nd': []})
         self.graph.indices.append(index)
         if t > algparas[0]:
-            event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '流量保护开关检测异常！'})
+            event = Event({'assetid': self.graph.deviceid, 'assetname': self.graph.devicename,
+                           'aiid': self.graph.aiid,
+                           'meastime': df.index[0], 'level': 1, 'info': '报警：流量保护开关检测异常！！'})
+            # event = Event({'assetid': self.graph.deviceid, 'meastime': df.index[0], 'level': 1, 'info': '流量保护开关检测异常！'})
             self.graph.events.append(event)
 
     def execute(self):

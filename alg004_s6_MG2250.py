@@ -37,13 +37,12 @@ class Alg004_S6:
     def __init__(self, graph):
         self.graph = graph
 
-    @staticmethod
     def get_fe(self, algparas):
         signal_num = len(self.graph.channelid)
         if 3 == signal_num:
-            df = self.graph.get_data_from_api(['sv_out', 'gap_act', 'cutoff_valve'])
+            df = self.graph.get_data_from_protobuf(['sv_out', 'gap_act', 'cutoff_valve'])
         elif 4 == signal_num:
-            df = self.graph.get_data_from_api(['sv_out', 'gap_act', 'single', 'cutoff_valve'])
+            df = self.graph.get_data_from_protobuf(['sv_out', 'gap_act', 'single', 'cutoff_valve'])
         else:
             raise Exception("Exception(减压阀漂移策略)：输入点位数量错误!")
         avg_sv_out = []
