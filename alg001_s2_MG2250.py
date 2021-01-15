@@ -57,7 +57,7 @@ class Alg001_S2:
         torq_min = []
         measdate = []
         if not df.empty:
-            idx = (df.spd_ref >= algparas[0]) & (df.spd_ref <= algparas[1]) & (0 == df.hook_status)
+            idx = (df.spd_ref >= algparas[0]) & (df.spd_ref <= algparas[1]) & (0 == df.hook_status) & (df.spd_ref.diff() == 0)
             re_iter = com_util.Reg.finditer(idx, int(algparas[2] * df.num_per_sec))
             n1 = int(algparas[3] * df.num_per_sec)
             n2 = int(algparas[4] * df.num_per_sec)

@@ -28,10 +28,7 @@ Author: chengqiliang
 import numpy as np
 from graph import Index
 import com_util
-import dateutil, pylab,random
-from pylab import *
-import pandas as pd
-from datetime import datetime,timedelta
+
 
 class Alg004_S8:
     def __init__(self, graph):
