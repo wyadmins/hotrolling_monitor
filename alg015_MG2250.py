@@ -14,9 +14,11 @@ Parameter Configs (4)：
 
 ==============
 Outputs:
+
 指标   |  指标id
 ---------------------
-*  双仪表偏差：  15000
+*  双仪表相对偏差：  15000
+*  双仪表绝对偏差：  15001
 """
 
 from itertools import groupby
@@ -41,11 +43,15 @@ class Alg015:
             for i in re_iter:
                 [stidx, edidx] = i.span()
                 n = (edidx - stidx) // 5  # 切头尾
-                r = (np.abs(np.mean(df.signal1[stidx+n:edidx-n]) - np.mean(df.signal2[stidx+n:edidx-n]))) \
-                    / np.mean(df.signal1[stidx+n:edidx-n]) * 100  # 双仪表相对偏差（%）
+                bias = np.abs(np.mean(df.signal1[stidx+n:edidx-n]) - np.mean(df.signal2[stidx+n:edidx-n]))
+                r = bias / np.mean(df.signal1[stidx+n:edidx-n]) * 100  # 双仪表相对偏差（%）
 
                 index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "15000",
                                'value1st': r, 'indices2nd': []})
+                self.graph.indices.append(index)
+
+                index = Index({'assetid': self.graph.deviceid, 'meastime1st': df.index[0], 'feid1st': "15001",
+                               'value1st': bias, 'indices2nd': []})
                 self.graph.indices.append(index)
 
                 self.graph.set_alarm('双仪表数值不匹配！')
