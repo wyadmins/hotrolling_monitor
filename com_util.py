@@ -76,21 +76,52 @@ def generate_graph_from_indices(filepath):
     exceptions = []
     starttime = d['starttime']
     endtime = d['endtime']
-    channelid = [tag['ChannelId'] for tag in d['tags']]
-    algcode = d['algCode']
+    # channelid = [tag['ChannelId'] for tag in d['tags']]
+    channelid = d['channelid']
+    # algcode = d['algCode']
+    algcode = d['algcode']
     deviceid = d['deviceid']
     devicename = d['devicename']
     aiid = d['aiid']
     parameters = str(d['parameter']).replace(']', '').replace('[', '')
-    alarm_configs = d['alarm_configs']
+    # alarm_configs = d['alarm_configs']
+    alarm_configs = d['alarm_thd']
+
     graph = Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
                  starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
-    graph.data = d['Data']
-
+    # graph.data = d['Data']
+    graph.data = d['data']
     return graph
 
 
 def generate_graph_from_exception(filepath):
+    with open(filepath, encoding='utf8') as f:
+        d = json.loads(f.read())
+    nodes = ''
+    datasource = ''
+    indices = []
+    events = []
+    datasourcetimes = ''
+    exceptions = []
+    starttime = d['starttime']
+    endtime = d['endtime']
+    # channelid = [tag['ChannelId'] for tag in d['tags']]
+    channelid = d['channelid']
+    # algcode = d['algCode']
+    algcode = d['algcode']
+    deviceid = d['deviceid']
+    devicename = d['devicename']
+    aiid = d['aiid']
+    alarm_configs = d['alarm_thd']
+    parameters = str(d['parameter']).replace(']', '').replace('[', '')
+    graph = Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
+                 starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
+    # graph.data = json.loads(d['Data'])
+    graph.data = d['data']
+    return graph
+
+
+def generate_graph_from_json(filepath):
     with open(filepath, encoding='utf8') as f:
         d = json.loads(f.read())
     nodes = ''
@@ -106,9 +137,9 @@ def generate_graph_from_exception(filepath):
     deviceid = d['deviceid']
     devicename = d['devicename']
     aiid = d['aiid']
+    alarm_configs = [] if not d['alarm_configs'] else Graph.parsing_alarm_thd(d['alarm_configs'])
     parameters = str(d['parameter']).replace(']', '').replace('[', '')
-    alarm_configs = d['alarm_configs']
     graph = Graph(nodes, algcode, datasource, indices, events, datasourcetimes, exceptions,
                  starttime, endtime, channelid, deviceid, devicename, aiid, parameters, alarm_configs)
-    graph.data = json.loads(d['Data'])
+    graph.data = d['Data']
     return graph
